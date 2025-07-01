@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poetry Prompt Lock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 0.5rem 1.5rem;
+      margin: 1rem;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Poetry Prompt Generator</h1>
+
+  <button id="generateBtn">Generate New Prompt</button>
+  <button id="lockBtn">Lock In Poem</button>
+
+  <div id="status">You can generate a prompt now.</div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const lockBtn = document.getElementById('lockBtn');
+    const status = document.getElementById('status');
+
+    let lockedIn = false;
+    let timer = null;
+    const waitTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    function setLockedIn() {
+      lockedIn = true;
+      generateBtn.disabled = true;
+      lockBtn.disabled = true;
+      status.textContent = 'Poem locked in! You cannot generate any more prompts.';
+    }
+
+    function enableGenerate() {
+      if (!lockedIn) {
+        generateBtn.disabled = false;
+        status.textContent = 'You can generate a prompt now.';
+      }
+    }
+
+    generateBtn.addEventListener('click', () => {
+      if (lockedIn) return;
+
+      // Generate a new prompt (for demo, just alert or update text)
+      alert('Here is your new poetry prompt!');
+
+      // Disable the generate button for 5 minutes
+      generateBtn.disabled = true;
+      status.textContent = 'Please wait 5 minutes before generating another prompt, or lock in your poem now.';
+
+      // Clear any existing timer
+      if (timer) clearTimeout(timer);
+
+      // Start 5-minute timer to re-enable generate button
+      timer = setTimeout(() => {
+        enableGenerate();
+      }, waitTime);
+    });
+
+    lockBtn.addEventListener('click', () => {
+      if (lockedIn) return;
+
+      if (confirm('Are you sure you want to lock in your poem? You won\'t be able to generate new prompts anymore.')) {
+        setLockedIn();
+
+        // Clear any waiting timer
+        if (timer) clearTimeout(timer);
+      }
+    });
+  </script>
+</body>
+</html>
